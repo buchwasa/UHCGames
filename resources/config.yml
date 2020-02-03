@@ -1,0 +1,74 @@
+---
+#Used for server transfers back to the hub
+server-ip: "play.adrenaline.today"
+server-port: 19132
+
+# ----- GAME CONFIGURATION ----- #
+#The order this goes in is item constant, meta, max amount.
+#This MUST be specified completely
+items:
+  - "BOW:0:1"
+  - "ARROW:0:16"
+  - "STONE:0:32"
+  - "WOODEN_PLANKS:0:32"
+  - "BUCKET:10:1" #LAVA
+  - "BUCKET:8:1" #WATER
+  - "DIAMOND:0:5"
+  - "APPLE:0:16"
+  - "DIAMOND_HELMET"
+  - "DIAMOND_BOOTS"
+  - "ENDER_PEARL:0:2"
+  - "BOTTLE_O_ENCHANTING:0:16"
+  - "DYE:4:64"
+  - "GOLDEN_APPLE:0:4"
+  - "STEAK:0:16"
+  - "CARROT:0:32"
+  - "CAKE:0:1"
+  - "GOLD_INGOT:0:16"
+  - "SNOWBALL:0:5"
+  - "FLINT_AND_STEEL:0:1"
+  - "COBWEB:0:3"
+
+#This is the blocks that can be placed during the game.
+placeable-blocks:
+  - "WOODEN_PLANKS"
+  - "STONE"
+  - "CRAFTING_TABLE"
+  - "CAKE_BLOCK"
+  - "COBWEB"
+
+#The list of placeable blocks is automatically able to be broken, since you can place them.
+breakable-blocks:
+  - "LEAVES"
+  - "LEAVES2"
+
+# ----- MAP CONFIGURATION ----- #
+#Each map has their own configuration. Breeze is the example map of what it should look like.
+#Adding a map is using the folder name of the world and in order to see these results, edit server.properties level-name to the world you will use.
+Breeze Island:
+  #Used for meetup borders
+  border: 40
+  #When grabbing each spawnpoint, make sure to ignore the decimal points.
+  #The decimal points will be replaced with a .5 at the end of the x and z coordinate, otherwise you won't spawn in the middle of the block.
+  spawnpoints: [
+  [98.5, 69, -34.5],
+  [78.5, 64, 13.5],
+  [76.5, 64, 60.5],
+  [29.5, 64, 83.5],
+  [26.5, 92, 163.5],
+  [3.5, 110, 65.5],
+  [159.5, 70, 126.5],
+  [-55.5, 64, 26.5],
+  [-116.5, 75, 25.5],
+  [-122.5, 63, 57.5],
+  [-27.5, 88, -3.5],
+  [8.5, 98, -17.5]
+  ]
+  #The 4 spawn points for meetups.
+  meetup-spawns: [
+  [15.5, 66, 49.5],
+  [40.5, 66, 24.5],
+  [15.5, 66, -0.5],
+  [-9.5, 66, 24.5]
+  ]
+...
