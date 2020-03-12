@@ -143,14 +143,6 @@ class UHCGamesTask extends Task{
 				$this->server->broadcastMessage(Loader::PREFIX . "Meetup is starting in $this->meetupTimer second(s).");
 				break;
 			case 0:
-				$spawnLocation = $this->plugin->map->getSpawnLocation();
-				foreach($this->plugin->map->getChunkTiles($spawnLocation->x >> 4, $spawnLocation->z >> 4) as $tile){
-					if($tile instanceof Chest){
-						$this->plugin->fillChest($tile);
-					}
-				}
-				$this->server->broadcastMessage(Loader::PREFIX . "Chests refilled!");
-
 				$spawns = $this->plugin->getConfig()->get($this->plugin->map->getFolderName())["meetup-spawns"];
 				shuffle($spawns);
 				foreach($this->plugin->gamePlayers as $player){
