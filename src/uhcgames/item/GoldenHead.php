@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace uhcgames\item;
 
-use pocketmine\entity\effect\Effect;
 use pocketmine\entity\effect\EffectInstance;
+use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\item\GoldenApple;
 use pocketmine\utils\TextFormat as TF;
 
@@ -16,8 +16,8 @@ class GoldenHead extends GoldenApple{
 
 	public function getAdditionalEffects() : array{
 		return [
-			new EffectInstance(Effect::REGENERATION(), 20 * ($this->getMeta() == 1 ? 10 : 5), 1, false),
-			new EffectInstance(Effect::ABSORPTION(), 20 * 120, 0, false)
+			new EffectInstance(VanillaEffects::REGENERATION(), 20 * ($this->getMeta() == 1 ? 10 : 5), 1, false),
+			new EffectInstance(VanillaEffects::ABSORPTION(), 20 * 120, 0, false)
 		];
 	}
 }
