@@ -82,7 +82,7 @@ class EventListener implements Listener{
 
 	public function handleDeath(PlayerDeathEvent $ev){
 		$player = $ev->getPlayer();
-		$player->getWorld()->dropItem($player, ItemFactory::get(ItemIds::GOLDEN_APPLE, 1));
+		$player->getWorld()->dropItem($player->getPosition(), ItemFactory::get(ItemIds::GOLDEN_APPLE, 1));
 		$player->setGamemode(GameMode::SPECTATOR());
 		if(isset($this->plugin->gamePlayers[$player->getName()])){
 			unset($this->plugin->gamePlayers[$player->getName()]);
@@ -110,14 +110,14 @@ class EventListener implements Listener{
 		if(!$placeable){
 			$ev->setCancelled();
 		}else{
-			$this->placedBlocks[World::blockHash($block->getX(), $block->getY(), $block->getZ())] = $player->getName();
+			$this->placedBlocks[World::blockHash($block->getPos()->getX(), $block->getPos()->getY(), $block->getPos()->getZ())] = $player->getName();
 		}
 	}
 
 	public function handleBreak(BlockBreakEvent $ev){
 		$block = $ev->getBlock();
 
-		$blockHash = World::blockHash($block->getX(), $block->getY(), $block->getZ());
+		$blockHash = World::blockHash($block->getPos()->getX(), $block->getPos()->getY(), $block->getPos()->getZ());
 		if(!isset($this->placedBlocks[$blockHash])){
 			$breakable = false;
 			foreach($this->plugin->getConfig()->get("breakable-blocks") as $b){

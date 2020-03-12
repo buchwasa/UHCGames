@@ -192,8 +192,10 @@ class UHCGamesTask extends Task{
 		$spawn = $this->plugin->map->getSpawnLocation();
 		if($this->plugin->gameStatus === self::BORDER_READY){
 			if((
-				 $p->getX() > $spawn->getX() + $this->border || $p->getX() < $spawn->getX() - $this->border ||
-				$p->getZ() > $spawn->getZ() + $this->border || $p->getZ() < $spawn->getZ() - $this->border
+				 $p->getPosition()->getX() > $spawn->getX() + $this->border
+				 || $p->getPosition()->getX() < $spawn->getX() - $this->border ||
+				$p->getPosition()->getZ() > $spawn->getZ() + $this->border 
+				|| $p->getPosition()->getZ() < $spawn->getZ() - $this->border
 			)){
 				$p->attack(new EntityDamageEvent($p, EntityDamageEvent::CAUSE_CUSTOM, 2));
 				$p->sendTip("You are outside border, get back inside!");
