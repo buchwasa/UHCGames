@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace uhcgames\tasks;
 
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\GameMode;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
