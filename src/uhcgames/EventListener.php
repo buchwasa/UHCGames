@@ -22,7 +22,7 @@ use pocketmine\item\ItemIds;
 use pocketmine\network\mcpe\protocol\AdventureSettingsPacket;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
 use pocketmine\player\Player;
-use pocketmine\tile\Chest;
+use pocketmine\block\tile\Chest;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
 use uhcgames\tasks\UHCGamesTask;

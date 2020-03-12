@@ -11,7 +11,6 @@ use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
-use pocketmine\tile\Chest;
 use pocketmine\utils\TextFormat;
 use uhcgames\Loader;
 

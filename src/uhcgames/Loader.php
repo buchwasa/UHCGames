@@ -10,7 +10,7 @@ use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
-use pocketmine\tile\Chest;
+use pocketmine\block\tile\Chest;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\world\World;
 use uhcgames\item\GoldenHead;
