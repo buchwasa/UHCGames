@@ -76,7 +76,7 @@ class UHCGamesTask extends Task{
 
 		foreach($this->plugin->gamePlayers as $player){
 			$this->handleBorder($player);
-			$player->setScoreTag(floor($player->getHealth() / 2) . TextFormat::RED . "❤")
+			$player->setScoreTag(floor($player->getHealth() / 2) . TextFormat::RED . "❤");
 		}
 	}
 
