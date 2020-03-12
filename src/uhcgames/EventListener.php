@@ -17,7 +17,8 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketSendEvent;
 use pocketmine\event\world\ChunkLoadEvent;
 use pocketmine\GameMode;
-use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 use pocketmine\network\mcpe\protocol\AdventureSettingsPacket;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
 use pocketmine\player\Player;
@@ -81,7 +82,7 @@ class EventListener implements Listener{
 
 	public function handleDeath(PlayerDeathEvent $ev){
 		$player = $ev->getPlayer();
-		$player->getWorld()->dropItem($player, Item::get(Item::GOLDEN_APPLE, 1));
+		$player->getWorld()->dropItem($player, ItemFactory::get(ItemIds::GOLDEN_APPLE, 1));
 		$player->setGamemode(GameMode::SPECTATOR());
 		if(isset($this->plugin->gamePlayers[$player->getName()])){
 			unset($this->plugin->gamePlayers[$player->getName()]);
@@ -101,7 +102,7 @@ class EventListener implements Listener{
 		$player = $ev->getPlayer();
 		$placeable = false;
 		foreach($this->plugin->getConfig()->get("placeable-blocks") as $b){
-			if($block->getId() === Item::fromString($b)->getId()){
+			if($block->getId() === ItemFactory::fromString($b)->getId()){
 				$placeable = true;
 				break;
 			}
@@ -120,7 +121,7 @@ class EventListener implements Listener{
 		if(!isset($this->placedBlocks[$blockHash])){
 			$breakable = false;
 			foreach($this->plugin->getConfig()->get("breakable-blocks") as $b){
-				if($block->getId() === Item::fromString($b)->getId()){
+				if($block->getId() === ItemFactory::fromString($b)->getId()){
 					$breakable = true;
 					break;
 				}

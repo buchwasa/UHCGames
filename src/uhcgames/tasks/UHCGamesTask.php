@@ -5,7 +5,8 @@ namespace uhcgames\tasks;
 
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\GameMode;
-use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
@@ -109,15 +110,15 @@ class UHCGamesTask extends Task{
 
 				foreach($this->plugin->gamePlayers as $player){
 					$player->setHealth($player->getMaxHealth());
-					$player->setFood($player->getMaxFood());
+					$player->getHungerManager()->setFood($player->getHungerManager()->getMaxFood());
 
 					$armorInventory = $player->getArmorInventory();
 					$inventory = $player->getInventory();
-					$inventory->addItem(Item::get(Item::STONE_SWORD));
-					$armorInventory->setHelmet(Item::get(Item::IRON_HELMET));
-					$armorInventory->setChestplate(Item::get(Item::IRON_CHESTPLATE));
-					$armorInventory->setLeggings(Item::get(Item::IRON_LEGGINGS));
-					$armorInventory->setBoots(Item::get(Item::IRON_BOOTS));
+					$inventory->addItem(ItemFactory::get(ItemIds::STONE_SWORD));
+					$armorInventory->setHelmet(ItemFactory::get(ItemIds::IRON_HELMET));
+					$armorInventory->setChestplate(ItemFactory::get(ItemIds::IRON_CHESTPLATE));
+					$armorInventory->setLeggings(ItemFactory::get(ItemIds::IRON_LEGGINGS));
+					$armorInventory->setBoots(ItemFactory::get(ItemIds::IRON_BOOTS));
 
 					$player->setImmobile(false);
 				}
