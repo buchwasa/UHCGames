@@ -7,7 +7,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\GameMode;
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
 use pocketmine\tile\Chest;

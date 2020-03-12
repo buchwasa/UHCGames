@@ -20,7 +20,7 @@ use pocketmine\GameMode;
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\AdventureSettingsPacket;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\tile\Chest;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
@@ -38,9 +38,10 @@ class EventListener implements Listener{
 	}
 
 	public function handleSend(DataPacketSendEvent $ev){
-		$packet = $ev->getPacket();
-		if($packet instanceof AdventureSettingsPacket){
-			$packet->setFlag(AdventureSettingsPacket::NO_CLIP, false);
+		foreach($ev->getPackets() as $packet){
+			if($packet instanceof AdventureSettingsPacket){
+				$packet->setFlag(AdventureSettingsPacket::NO_CLIP, false);
+			}
 		}
 	}
 
@@ -143,9 +144,9 @@ class EventListener implements Listener{
 		foreach($chunk->getTiles() as $tile){
 			if($tile instanceof Chest){
 				$tileLocations = [];
-				if(!in_array($tile->asVector3(), $tileLocations)){
+				if(!in_array($tile->getPos(), $tileLocations)){
 					$this->plugin->fillChest($tile);
-					$tileLocations[] = $tile->asVector3();
+					$tileLocations[] = $tile->getPos();
 				}
 			}
 		}
