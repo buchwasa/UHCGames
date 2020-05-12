@@ -27,14 +27,14 @@ class UHCGamesTask extends Task{
 	private const BORDER_READY = 4;
 
 	/** @var int */
-	private $countdown = 61;
+	private $countdown = 60;
 	/** @var int */
-	private $meetupTimer = 31;
+	private $meetupTimer = 30;
 	/** @var int */
 	private $shutdownTimer = 5;
 
 	/** @var int */
-	private $border = 0;
+	private $border = 0; //TODO: Config
 
 	/** @var Loader */
 	private $plugin;
@@ -81,7 +81,6 @@ class UHCGamesTask extends Task{
 	}
 
 	private function handleCountdown(){
-		$this->countdown--;
 		if(count($this->plugin->gamePlayers) <= 1){
 			$this->plugin->gameStatus = self::WAITING;
 			$this->countdown = 61;
@@ -123,10 +122,10 @@ class UHCGamesTask extends Task{
 				}
 				break;
 		}
+		$this->countdown--;
 	}
 
 	private function handleMeetup(){
-		$this->meetupTimer--;
 		switch($this->meetupTimer){
 			case 30:
 				$this->server->broadcastMessage(Loader::PREFIX . "Meetup is starting in $this->meetupTimer seconds.");
@@ -155,11 +154,11 @@ class UHCGamesTask extends Task{
 				$this->plugin->gameStatus = self::BORDER_READY;
 				break;
 		}
+		$this->meetupTimer--;
 	}
 
 	private function onWin(){
 		if(count($this->plugin->gamePlayers) > 1) return;
-		$this->shutdownTimer--;
 
 		if($this->shutdownTimer === 0){
 			foreach($this->server->getOnlinePlayers() as $p){
@@ -167,7 +166,7 @@ class UHCGamesTask extends Task{
 				$p->transfer((string) $config->get("server-ip"), (int) $config->get("server-port"));
 			}
 			$this->plugin->getServer()->shutdown();
-		}elseif($this->shutdownTimer === 4){
+		}elseif($this->shutdownTimer === 5){
 			if(count($this->plugin->gamePlayers) === 1){
 				foreach($this->plugin->gamePlayers as $player){
 					$player->setGamemode(GameMode::CREATIVE());
@@ -177,6 +176,7 @@ class UHCGamesTask extends Task{
 				$this->server->broadcastMessage(Loader::PREFIX . "No one won the game.");
 			}
 		}
+		$this->shutdownTimer--;
 	}
 
 	private function handleBorder(Player $p){
