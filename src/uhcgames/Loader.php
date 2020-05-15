@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace uhcgames;
 
 use pocketmine\item\VanillaItems;
+use uhcgames\game\type\GamePhase;
 use uhcgames\utils\RegionUtils;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
@@ -14,14 +15,14 @@ use pocketmine\block\tile\Chest;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\world\World;
 use uhcgames\item\GoldenHead;
-use uhcgames\tasks\UHCGamesTask;
+use uhcgames\game\UHCGamesTask;
 
 class Loader extends PluginBase{
 	/** @var Player[] */
 	public $gamePlayers = [];
 	public $usedSpawns = [];
 	/** @var int */
-	public $gameStatus = UHCGamesTask::WAITING;
+	public $gameStatus = GamePhase::PHASE_WAITING;
 	/** @var World */
 	public $map;
 	/** @var string */

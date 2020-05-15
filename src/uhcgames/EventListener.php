@@ -24,7 +24,7 @@ use pocketmine\player\Player;
 use pocketmine\block\tile\Chest;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
-use uhcgames\tasks\UHCGamesTask;
+use uhcgames\game\type\GamePhase;
 
 class EventListener implements Listener{
 	/** @var Loader */
@@ -47,7 +47,7 @@ class EventListener implements Listener{
 
 	public function handleLogin(PlayerLoginEvent $ev){
 		$player = $ev->getPlayer();
-		if($this->plugin->gameStatus <= UHCGamesTask::COUNTDOWN){
+		if($this->plugin->gameStatus <= GamePhase::PHASE_COUNTDOWN){
 			$this->plugin->gamePlayers[$player->getName()] = $player;
 		}else{
 			$player->disconnect("This game has already started!");
@@ -64,7 +64,7 @@ class EventListener implements Listener{
 	}
 
 	public function handleDamage(EntityDamageEvent $ev){
-		if($this->plugin->gameStatus <= UHCGamesTask::COUNTDOWN){
+		if($this->plugin->gameStatus <= GamePhase::PHASE_COUNTDOWN){
 			$ev->setCancelled();
 		}
 	}
