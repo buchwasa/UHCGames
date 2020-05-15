@@ -5,7 +5,6 @@ namespace uhcgames;
 
 use pocketmine\item\VanillaItems;
 use uhcgames\game\type\GamePhase;
-use uhcgames\utils\RegionUtils;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
@@ -16,6 +15,7 @@ use pocketmine\utils\TextFormat as TF;
 use pocketmine\world\World;
 use uhcgames\item\GoldenHead;
 use uhcgames\game\UHCGamesTask;
+use wumpotamus\chunkloader\ChunkRegion;
 
 class Loader extends PluginBase{
 	/** @var Player[] */
@@ -47,7 +47,7 @@ class Loader extends PluginBase{
 		$spawns = $this->getConfig()->get($this->map->getFolderName())["spawnpoints"];
 		shuffle($spawns);
 		$locations = array_shift($spawns);
-		RegionUtils::onChunkGenerated($this->map, $locations[0] >> 4, $locations[2] >> 4, function() use($locations, $player){
+		ChunkRegion::onChunkGenerated($this->map, $locations[0] >> 4, $locations[2] >> 4, function() use($locations, $player){
 			if(!in_array($locations, $this->usedSpawns)){
 				$player->teleport(new Vector3($locations[0], $locations[1], $locations[2]));
 				$this->usedSpawns[$player->getName()] = $locations;

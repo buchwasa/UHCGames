@@ -5,6 +5,9 @@ branches:
 projects:
   UHCGames:
     path: ""
+    libs:
+      - src: Wumpotamus/libChunkLoader/libChunkLoader
+        version: 2.0.0
     lint:
       phpstan: false
 ...
