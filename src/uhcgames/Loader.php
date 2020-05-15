@@ -19,40 +19,83 @@ use wumpotamus\chunkloader\ChunkRegion;
 
 class Loader extends PluginBase{
 	/** @var Player[] */
-	public $gamePlayers = [];
-	public $usedSpawns = [];
-	/** @var int */
-	public $gameStatus = GamePhase::PHASE_WAITING;
-	/** @var World */
-	public $map;
+	private $gamePlayers = [];
+	/** @var Vector3[] */
+	private $usedSpawns = [];
+	/** @var UHCGamesTask */
+	private $gameTask;
 	/** @var string */
-	public const PREFIX = TF::RED . TF::BOLD . "Adrenaline> " . TF::RESET . TF::GOLD;
+	private static $prefix;
 
 	public function onEnable(){
-		$this->map = $this->getServer()->getWorldManager()->getDefaultWorld();
-		if(!$this->getConfig()->get($this->map->getFolderName())){
+		self::$prefix = $this->getConfig()->get("prefix");
+		$map = $this->getServer()->getWorldManager()->getDefaultWorld();
+		if(!$this->getConfig()->get($map->getFolderName())){
 			$this->getLogger()->emergency("Map not found in configuration, shutting down!");
 			$this->getServer()->shutdown();
 		}
-		$this->map->setTime(7000);
-		$this->map->stopTime();
+		$map->setTime(7000);
+		$map->stopTime();
 		new EventListener($this);
 
-		$this->getScheduler()->scheduleRepeatingTask(new UHCGamesTask($this), 20);
+		$this->gameTask = new UHCGamesTask($this, $map);
+		$this->getScheduler()->scheduleRepeatingTask(new UHCGamesTask($this, $map), 20);
 
 		(new ItemFactory())->register(new GoldenHead(ItemIds::GOLDEN_APPLE, 1, "Golden Head"), true);
 	}
 
-	public function randomizeSpawn(Player $player){
-		$spawns = $this->getConfig()->get($this->map->getFolderName())["spawnpoints"];
+	public static function getPrefix() : string{
+		return self::$prefix;
+	}
+
+	public function getGameTask() : UHCGamesTask{
+		return $this->gameTask;
+	}
+
+	public function addToGame(Player $player) : void{
+		$this->gamePlayers[$player->getName()] = $player;
+	}
+
+	public function removeFromGame(Player $player) : void{
+		unset($this->gamePlayers[$player->getName()]);
+	}
+
+	/**
+	 * @return Player[]
+	 */
+	public function getGamePlayers() : array{
+		return $this->gamePlayers;
+	}
+
+	public function isInGame(Player $player) : bool{
+		return isset($this->gamePlayers[$player->getName()]);
+	}
+
+	public function removePlayerUsedSpawn(Player $player) : void{
+		unset($this->usedSpawns[$player->getName()]);
+	}
+
+	/**
+	 * @return Vector3[]
+	 */
+	public function getUsedSpawns() : array{
+		return $this->usedSpawns;
+	}
+
+	public function isSpawnUsedByPlayer(Player $player) : bool{
+		return isset($this->usedSpawns[$player->getName()]);
+	}
+
+	public function randomizeSpawn(Player $player, World $world){
+		$spawns = $this->getConfig()->get($world->getFolderName())["spawnpoints"];
 		shuffle($spawns);
 		$locations = array_shift($spawns);
-		ChunkRegion::onChunkGenerated($this->map, $locations[0] >> 4, $locations[2] >> 4, function() use($locations, $player){
+		ChunkRegion::onChunkGenerated($world, $locations[0] >> 4, $locations[2] >> 4, function() use($locations, $player, $world){
 			if(!in_array($locations, $this->usedSpawns)){
 				$player->teleport(new Vector3($locations[0], $locations[1], $locations[2]));
 				$this->usedSpawns[$player->getName()] = $locations;
 			}else{
-				$this->randomizeSpawn($player);
+				$this->randomizeSpawn($player, $world);
 			}
 		});
 	}

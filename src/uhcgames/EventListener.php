@@ -47,8 +47,8 @@ class EventListener implements Listener{
 
 	public function handleLogin(PlayerLoginEvent $ev){
 		$player = $ev->getPlayer();
-		if($this->plugin->gameStatus <= GamePhase::PHASE_COUNTDOWN){
-			$this->plugin->gamePlayers[$player->getName()] = $player;
+		if($this->plugin->getGameTask()->getGamePhase() <= GamePhase::PHASE_COUNTDOWN){
+			$this->plugin->addToGame($player);
 		}else{
 			$player->disconnect("This game has already started!");
 		}
@@ -58,13 +58,13 @@ class EventListener implements Listener{
 		$player = $ev->getPlayer();
 		$ev->setJoinMessage("");
 
-		$this->plugin->randomizeSpawn($player);
+		$this->plugin->randomizeSpawn($player, $player->getWorld());
 
 		$player->setImmobile();
 	}
 
 	public function handleDamage(EntityDamageEvent $ev){
-		if($this->plugin->gameStatus <= GamePhase::PHASE_COUNTDOWN){
+		if($this->plugin->getGameTask()->getGamePhase() <= GamePhase::PHASE_COUNTDOWN){
 			$ev->setCancelled();
 		}
 	}
@@ -72,10 +72,10 @@ class EventListener implements Listener{
 	public function handleLeave(PlayerQuitEvent $ev){
 		$player = $ev->getPlayer();
 		$ev->setQuitMessage("");
-		if(isset($this->plugin->gamePlayers[$player->getName()])){
-			unset($this->plugin->gamePlayers[$player->getName()]);
-		}elseif(isset($this->plugin->usedSpawns[$player->getName()])){
-			unset($this->plugin->usedSpawns[$player->getName()]);
+		if($this->plugin->isInGame($player)){
+			$this->plugin->removeFromGame($player);
+		}elseif($this->plugin->isSpawnUsedByPlayer($player)){
+			$this->plugin->removePlayerUsedSpawn($player);
 		}
 	}
 
@@ -83,8 +83,8 @@ class EventListener implements Listener{
 		$player = $ev->getPlayer();
 		$player->getWorld()->dropItem($player->getPosition(), VanillaItems::GOLDEN_APPLE());
 		$player->setGamemode(GameMode::SPECTATOR());
-		if(isset($this->plugin->gamePlayers[$player->getName()])){
-			unset($this->plugin->gamePlayers[$player->getName()]);
+		if($this->plugin->isInGame($player)){
+			$this->plugin->removeFromGame($player);
 		}
 
 		$cause = $player->getLastDamageCause();

@@ -1,5 +1,9 @@
 ---
+#Used for broadcasts
+
+prefix: "Server>"
 #Used for server transfers back to the hub
+transfer: false
 server-ip: "play.adrenaline.today"
 server-port: 19132
 

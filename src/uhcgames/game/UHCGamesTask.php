@@ -9,8 +9,8 @@ use pocketmine\math\Vector3;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
-use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use pocketmine\world\World;
 use uhcgames\game\type\GamePhase;
 use uhcgames\game\type\GameTimer;
 use uhcgames\Loader;
@@ -22,34 +22,39 @@ class UHCGamesTask extends Task{
 	private $meetupTimer = GameTimer::TIMER_MEETUP;
 	/** @var int */
 	private $shutdownTimer = GameTimer::TIMER_SHUTDOWN;
+	/** @var int */
+	private $gamePhase = GamePhase::PHASE_WAITING;
 
 	/** @var int */
 	private $border;
-
 	/** @var Loader */
 	private $plugin;
-	/** @var Server */
-	private $server;
+	/** @var World */
+	private $world;
 
-	public function __construct(Loader $plugin){
+	public function __construct(Loader $plugin, World $world){
 		$this->plugin = $plugin;
-		$this->server = $plugin->getServer();
-		$this->border = $plugin->getConfig()->get($plugin->map->getFolderName())["border"];
+		$this->world = $world;
+		$this->border = $plugin->getConfig()->get($world->getFolderName())["border"];
+	}
+	
+	public function getGamePhase() : int{
+		return $this->gamePhase;
 	}
 
 	public function onRun(int $currentTick){
-		switch($this->plugin->gameStatus){
+		switch($this->gamePhase){
 			case GamePhase::PHASE_WAITING:
-				if(count($this->plugin->gamePlayers) >= 2){
-					$this->plugin->gameStatus = GamePhase::PHASE_COUNTDOWN;
+				if(count($this->plugin->getGamePlayers()) >= 2){
+					$this->gamePhase = GamePhase::PHASE_COUNTDOWN;
 				}
 				break;
 			case GamePhase::PHASE_COUNTDOWN:
 				$this->handleCountdown();
 				break;
 			case GamePhase::PHASE_MATCH:
-				if(count($this->plugin->gamePlayers) <= 4){
-					$this->plugin->gameStatus = GamePhase::PHASE_MEETUP;
+				if(count($this->plugin->getGamePlayers()) <= 4){
+					$this->gamePhase = GamePhase::PHASE_MEETUP;
 				}
 				break;
 			case GamePhase::PHASE_MEETUP:
@@ -57,44 +62,45 @@ class UHCGamesTask extends Task{
 				break;
 		}
 
-		if($this->plugin->gameStatus >= GamePhase::PHASE_MATCH){
-			foreach($this->plugin->gamePlayers as $player){
+		if($this->gamePhase >= GamePhase::PHASE_MATCH){
+			foreach($this->plugin->getGamePlayers() as $player){
 				$player->setImmobile(false);
 			}
 			$this->onWin();
 		}
 
-		foreach($this->plugin->gamePlayers as $player){
+		foreach($this->plugin->getGamePlayers() as $player){
 			$this->handleBorder($player);
 			$player->setScoreTag(floor($player->getHealth() / 2) . TextFormat::RED . "❤");
 		}
 	}
 
 	private function handleCountdown(){
-		if(count($this->plugin->gamePlayers) <= 1){
-			$this->plugin->gameStatus = GamePhase::PHASE_WAITING;
+		$server = $this->plugin->getServer();
+		if(count($this->plugin->getGamePlayers()) <= 1){
+			$this->gamePhase = GamePhase::PHASE_WAITING;
 			$this->countdown = GameTimer::TIMER_COUNTDOWN;
 		}
 
 		switch($this->countdown){
 			case 60:
-				$this->server->broadcastMessage(Loader::PREFIX . "Game is starting in 1 minute.");
+				$server->broadcastMessage(Loader::getPrefix() . "Game is starting in 1 minute.");
 				break;
 			case 30:
 			case 10:
-				$this->server->broadcastMessage(Loader::PREFIX . "Game is starting in $this->countdown seconds.");
+				$server->broadcastMessage(Loader::getPrefix() . "Game is starting in $this->countdown seconds.");
 				break;
 			case 5:
 			case 4:
 			case 3:
 			case 2:
 			case 1:
-				$this->server->broadcastMessage(Loader::PREFIX . "Game is starting in $this->countdown second(s).");
+				$server->broadcastMessage(Loader::getPrefix() . "Game is starting in $this->countdown second(s).");
 				break;
 			case 0:
-				$this->plugin->gameStatus = GamePhase::PHASE_MATCH;
+				$this->gamePhase = GamePhase::PHASE_MATCH;
 
-				foreach($this->plugin->gamePlayers as $player){
+				foreach($this->plugin->getGamePlayers() as $player){
 					$player->setHealth($player->getMaxHealth());
 					$player->getHungerManager()->setFood($player->getHungerManager()->getMaxFood());
 
@@ -115,30 +121,31 @@ class UHCGamesTask extends Task{
 	}
 
 	private function handleMeetup(){
+		$server = $this->plugin->getServer();
 		switch($this->meetupTimer){
 			case 30:
 			case 10:
-				$this->server->broadcastMessage(Loader::PREFIX . "Meetup is starting in $this->meetupTimer seconds.");
+				$server->broadcastMessage(Loader::getPrefix() . "Meetup is starting in $this->meetupTimer seconds.");
 				break;
 			case 5:
 			case 4:
 			case 3:
 			case 2:
 			case 1:
-				$this->server->broadcastMessage(Loader::PREFIX . "Meetup is starting in $this->meetupTimer second(s).");
+				$server->broadcastMessage(Loader::getPrefix() . "Meetup is starting in $this->meetupTimer second(s).");
 				break;
 			case 0:
-				$spawns = $this->plugin->getConfig()->get($this->plugin->map->getFolderName())["meetup-spawns"];
+				$spawns = $this->plugin->getConfig()->get($this->world->getFolderName())["meetup-spawns"];
 				shuffle($spawns);
-				foreach($this->plugin->gamePlayers as $player){
+				foreach($this->plugin->getGamePlayers() as $player){
 					$locations = array_shift($spawns);
 					if(isset($locations)){
 						$player->teleport(new Vector3($locations[0], $locations[1], $locations[2]));
 					}
 				}
 
-				$this->server->broadcastMessage(Loader::PREFIX . "Border shrunk to $this->border! Walking into it will cause you to take damage!");
-				$this->plugin->gameStatus = GamePhase::PHASE_BORDER;
+				$server->broadcastMessage(Loader::getPrefix() . "Border shrunk to $this->border! Walking into it will cause you to take damage!");
+				$this->gamePhase = GamePhase::PHASE_BORDER;
 				break;
 		}
 
@@ -146,22 +153,25 @@ class UHCGamesTask extends Task{
 	}
 
 	private function onWin(){
-		if(count($this->plugin->gamePlayers) > 1) return;
+		$server = $this->plugin->getServer();
+		if(count($this->plugin->getGamePlayers()) > 1) return;
 
 		if($this->shutdownTimer === 0){
-			foreach($this->server->getOnlinePlayers() as $p){
+			foreach($server->getOnlinePlayers() as $p){
 				$config = $this->plugin->getConfig();
-				$p->transfer((string) $config->get("server-ip"), (int) $config->get("server-port"));
+				if((bool) $config->get("transfer")){
+					$p->transfer((string) $config->get("server-ip"), (int) $config->get("server-port"));
+				}
 			}
 			$this->plugin->getServer()->shutdown();
 		}elseif($this->shutdownTimer === 5){
-			if(count($this->plugin->gamePlayers) === 1){
-				foreach($this->plugin->gamePlayers as $player){
+			if(count($this->plugin->getGamePlayers()) === 1){
+				foreach($this->plugin->getGamePlayers() as $player){
 					$player->setGamemode(GameMode::CREATIVE());
-					$this->server->broadcastMessage(Loader::PREFIX . $player->getName() . " won the game!");
+					$server->broadcastMessage(Loader::getPrefix() . $player->getName() . " won the game!");
 				}
 			}else{
-				$this->server->broadcastMessage(Loader::PREFIX . "No one won the game.");
+				$server->broadcastMessage(Loader::getPrefix() . "No one won the game.");
 			}
 		}
 
@@ -169,8 +179,8 @@ class UHCGamesTask extends Task{
 	}
 
 	private function handleBorder(Player $p){
-		$spawn = $this->plugin->map->getSpawnLocation();
-		if($this->plugin->gameStatus === GamePhase::PHASE_BORDER){
+		$spawn = $this->world->getSpawnLocation();
+		if($this->gamePhase === GamePhase::PHASE_BORDER){
 			if((
 				 $p->getPosition()->getX() > $spawn->getX() + $this->border
 				 || $p->getPosition()->getX() < $spawn->getX() - $this->border ||
