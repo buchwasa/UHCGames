@@ -14,6 +14,10 @@ use pocketmine\world\World;
 use uhcgames\game\type\GamePhase;
 use uhcgames\game\type\GameTimer;
 use uhcgames\Loader;
+use function array_shift;
+use function count;
+use function floor;
+use function shuffle;
 
 class UHCGamesTask extends Task{
 	/** @var int */

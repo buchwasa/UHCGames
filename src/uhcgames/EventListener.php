@@ -25,6 +25,7 @@ use pocketmine\block\tile\Chest;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
 use uhcgames\game\type\GamePhase;
+use function in_array;
 
 class EventListener implements Listener{
 	/** @var Loader */
@@ -33,8 +34,8 @@ class EventListener implements Listener{
 	private $placedBlocks = [];
 
 	public function __construct(Loader $plugin){
-		$this->plugin = $plugin;
 		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
+		$this->plugin = $plugin;
 	}
 
 	public function handleSend(DataPacketSendEvent $ev){
