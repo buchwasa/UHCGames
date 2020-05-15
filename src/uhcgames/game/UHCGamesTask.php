@@ -36,7 +36,7 @@ class UHCGamesTask extends Task{
 	public function __construct(Loader $plugin, World $world){
 		$this->plugin = $plugin;
 		$this->world = $world;
-		$this->border = $plugin->getConfig()->get($world->getFolderName())["border"];
+		$this->border = $plugin->getConfig()->get("worlds")[$world->getFolderName()]["border"];
 	}
 	
 	public function getGamePhase() : int{

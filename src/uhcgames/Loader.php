@@ -33,18 +33,19 @@ class Loader extends PluginBase{
 	public function onEnable(){
 		self::$prefix = $this->getConfig()->get("prefix");
 		$map = $this->getServer()->getWorldManager()->getDefaultWorld();
-		if(!$this->getConfig()->get($map->getFolderName())){
+		if(!isset($this->getConfig()->get("worlds")[$map->getFolderName()])){
 			$this->getLogger()->emergency("Map not found in configuration, shutting down!");
 			$this->getServer()->shutdown();
+		}else{
+			$map->setTime(7000);
+			$map->stopTime();
+			new EventListener($this);
+
+			$this->gameTask = new UHCGamesTask($this, $map);
+			$this->getScheduler()->scheduleRepeatingTask(new UHCGamesTask($this, $map), 20);
+
+			(new ItemFactory())->register(new GoldenHead(ItemIds::GOLDEN_APPLE, 1, "Golden Head"), true);
 		}
-		$map->setTime(7000);
-		$map->stopTime();
-		new EventListener($this);
-
-		$this->gameTask = new UHCGamesTask($this, $map);
-		$this->getScheduler()->scheduleRepeatingTask(new UHCGamesTask($this, $map), 20);
-
-		(new ItemFactory())->register(new GoldenHead(ItemIds::GOLDEN_APPLE, 1, "Golden Head"), true);
 	}
 
 	public static function getPrefix() : string{
@@ -93,7 +94,7 @@ class Loader extends PluginBase{
 		if($type === "meetup-spawns"){
 			$this->removePlayerUsedSpawn($player);
 		}
-		$spawns = $this->getConfig()->get($world->getFolderName())[$type];
+		$spawns = $this->getConfig()->get("worlds")[$world->getFolderName()][$type];
 		shuffle($spawns);
 		$locations = array_shift($spawns);
 		ChunkRegion::onChunkGenerated($world, $locations[0] >> 4, $locations[2] >> 4, function() use($locations, $player, $world){
@@ -123,5 +124,10 @@ class Loader extends PluginBase{
 				$inventory->setItem($rand, $itemString);
 			}
 		}
+	}
+
+	public function onDisable(){
+		$worldNames = array_keys((array) $this->getConfig()->get("worlds"));
+		$this->getServer()->setConfigString("level-name", $worldNames[array_rand($worldNames)]);
 	}
 }

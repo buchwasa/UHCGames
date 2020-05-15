@@ -1,6 +1,5 @@
 ---
 #Used for broadcasts
-
 prefix: "Server>"
 #Used for server transfers back to the hub
 transfer: false
@@ -51,30 +50,31 @@ breakable-blocks:
 # ----- MAP CONFIGURATION ----- #
 #Each map has their own configuration. Breeze is the example map of what it should look like.
 #Adding a map is using the folder name of the world and in order to see these results, edit server.properties level-name to the world you will use.
-Breeze Island:
-  #Used for meetup borders
-  border: 40
-  #When grabbing each spawnpoint, make sure to ignore the decimal points.
-  #The decimal points will be replaced with a .5 at the end of the x and z coordinate, otherwise you won't spawn in the middle of the block.
-  spawnpoints: [
-  [98.5, 69, -34.5],
-  [78.5, 64, 13.5],
-  [76.5, 64, 60.5],
-  [29.5, 64, 83.5],
-  [26.5, 92, 163.5],
-  [3.5, 110, 65.5],
-  [159.5, 70, 126.5],
-  [-55.5, 64, 26.5],
-  [-116.5, 75, 25.5],
-  [-122.5, 63, 57.5],
-  [-27.5, 88, -3.5],
-  [8.5, 98, -17.5]
-  ]
-  #The 4 spawn points for meetups.
-  meetup-spawns: [
-  [15.5, 66, 49.5],
-  [40.5, 66, 24.5],
-  [15.5, 66, -0.5],
-  [-9.5, 66, 24.5]
-  ]
+worlds:
+  Breeze Island:
+    #Used for meetup borders
+    border: 40
+    #When grabbing each spawnpoint, make sure to ignore the decimal points.
+    #The decimal points will be replaced with a .5 at the end of the x and z coordinate, otherwise you won't spawn in the middle of the block.
+    spawnpoints: [
+    [98.5, 69, -34.5],
+    [78.5, 64, 13.5],
+    [76.5, 64, 60.5],
+    [29.5, 64, 83.5],
+    [26.5, 92, 163.5],
+    [3.5, 110, 65.5],
+    [159.5, 70, 126.5],
+    [-55.5, 64, 26.5],
+    [-116.5, 75, 25.5],
+    [-122.5, 63, 57.5],
+    [-27.5, 88, -3.5],
+    [8.5, 98, -17.5]
+    ]
+    #The 4 spawn points for meetups.
+    meetup-spawns: [
+    [15.5, 66, 49.5],
+    [40.5, 66, 24.5],
+    [15.5, 66, -0.5],
+    [-9.5, 66, 24.5]
+    ]
 ...
