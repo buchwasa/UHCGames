@@ -5,7 +5,6 @@ namespace uhcgames\game;
 
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\item\VanillaItems;
-use pocketmine\math\Vector3;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
@@ -14,10 +13,8 @@ use pocketmine\world\World;
 use uhcgames\game\type\GamePhase;
 use uhcgames\game\type\GameTimer;
 use uhcgames\Loader;
-use function array_shift;
 use function count;
 use function floor;
-use function shuffle;
 
 class UHCGamesTask extends Task{
 	/** @var int */
@@ -139,13 +136,8 @@ class UHCGamesTask extends Task{
 				$server->broadcastMessage(Loader::getPrefix() . "Meetup is starting in $this->meetupTimer second(s).");
 				break;
 			case 0:
-				$spawns = $this->plugin->getConfig()->get($this->world->getFolderName())["meetup-spawns"];
-				shuffle($spawns);
 				foreach($this->plugin->getGamePlayers() as $player){
-					$locations = array_shift($spawns);
-					if(isset($locations)){
-						$player->teleport(new Vector3($locations[0], $locations[1], $locations[2]));
-					}
+					$this->plugin->randomizeSpawn($player, $this->world, "meetup-spawns");
 				}
 
 				$server->broadcastMessage(Loader::getPrefix() . "Border shrunk to $this->border! Walking into it will cause you to take damage!");
