@@ -4,43 +4,45 @@ server-ip: "play.adrenaline.today"
 server-port: 19132
 
 # ----- GAME CONFIGURATION ----- #
-#The order this goes in is item constant, meta, max amount.
+#The order this goes in is item name, max amount.
 #This MUST be specified completely
 items:
-  - "BOW:0:1"
-  - "ARROW:0:16"
-  - "STONE:0:32"
-  - "WOODEN_PLANKS:0:32"
-  - "BUCKET:10:1" #LAVA
-  - "BUCKET:8:1" #WATER
-  - "DIAMOND:0:5"
-  - "APPLE:0:16"
-  - "DIAMOND_HELMET"
-  - "DIAMOND_BOOTS"
-  - "ENDER_PEARL:0:2"
-  - "BOTTLE_O_ENCHANTING:0:16"
-  - "DYE:4:64"
-  - "GOLDEN_APPLE:0:4"
-  - "STEAK:0:16"
-  - "CARROT:0:32"
-  - "CAKE:0:1"
-  - "GOLD_INGOT:0:16"
-  - "SNOWBALL:0:5"
-  - "FLINT_AND_STEEL:0:1"
-  - "COBWEB:0:3"
+  - "bow"
+  - "arrow:16"
+  # - "STONE:0:32"
+  # - "WOODEN_PLANKS:0:32"
+  - "lava_bucket"
+  - "water_bucket"
+  - "diamond:5"
+  - "apple:16"
+  - "diamond_helmet"
+  - "diamond_boots"
+  - "ender_pearl:2"
+  - "experience_bottle:16"
+  - "lapis_lazuli:64"
+  - "golden_apple:4"
+  - "steak:16"
+  - "carrot:32"
+  # - "CAKE:0:1"
+  - "gold_ingot:16"
+  - "flint_and_steel"
+  # - "COBWEB:0:3"
 
 #This is the blocks that can be placed during the game.
 placeable-blocks:
-  - "WOODEN_PLANKS"
-  - "STONE"
-  - "CRAFTING_TABLE"
-  - "CAKE_BLOCK"
-  - "COBWEB"
+  - "oak_planks"
+  - "stone"
+  - "crafting_table"
+  - "cake_block"
+  - "cobweb"
 
 #The list of placeable blocks is automatically able to be broken, since you can place them.
 breakable-blocks:
-  - "LEAVES"
-  - "LEAVES2"
+  - "acacia_leaves"
+  - "birch_leaves"
+  - "dark_oak_leaves"
+  - "jungle_leaves"
+  - "oak_leaves"
 
 # ----- MAP CONFIGURATION ----- #
 #Each map has their own configuration. Breeze is the example map of what it should look like.
