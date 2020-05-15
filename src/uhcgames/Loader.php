@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace uhcgames;
 
+use pocketmine\item\VanillaItems;
 use uhcgames\utils\RegionUtils;
-use pocketmine\block\Block;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
@@ -39,7 +39,7 @@ class Loader extends PluginBase{
 
 		$this->getScheduler()->scheduleRepeatingTask(new UHCGamesTask($this), 20);
 
-		ItemFactory::register(new GoldenHead(ItemIds::GOLDEN_APPLE, 1, "Golden Head"), true);
+		(new ItemFactory())->register(new GoldenHead(ItemIds::GOLDEN_APPLE, 1, "Golden Head"), true);
 	}
 
 	public function randomizeSpawn(Player $player){
@@ -61,18 +61,16 @@ class Loader extends PluginBase{
 		$inventory->clearAll();
 		foreach($this->getConfig()->get("items") as $item){
 			if(mt_rand(1, 100) <= 50){
-				$itemString = ItemFactory::fromString($item);
-				$count = 1;
-				$meta = 0;
 				$data = explode(":", $item);
-				if(count($data) > 2){
-					$count = mt_rand(1, (int) $data[2]);
-					$meta = (int) $data[1];
+				$itemString = VanillaItems::fromString($data[0]);
+				$count = 1;
+				if(count($data) > 1){
+					$count = mt_rand(1, (int) $data[1]);
 				}
-				$item = ItemFactory::get($itemString->getId(), $meta, $count);
+				$itemString->setCount($count);
 
 				$rand = mt_rand(0, 26);
-				$inventory->setItem($rand, $item);
+				$inventory->setItem($rand, $itemString);
 			}
 		}
 	}

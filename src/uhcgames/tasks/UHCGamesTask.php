@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace uhcgames\tasks;
 
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\item\ItemFactory;
-use pocketmine\item\ItemIds;
+use pocketmine\item\VanillaItems;
 use pocketmine\math\Vector3;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
@@ -34,7 +33,7 @@ class UHCGamesTask extends Task{
 	private $shutdownTimer = 5;
 
 	/** @var int */
-	private $border = 0; //TODO: Config
+	private $border;
 
 	/** @var Loader */
 	private $plugin;
@@ -112,11 +111,11 @@ class UHCGamesTask extends Task{
 
 					$armorInventory = $player->getArmorInventory();
 					$inventory = $player->getInventory();
-					$inventory->addItem(ItemFactory::get(ItemIds::STONE_SWORD));
-					$armorInventory->setHelmet(ItemFactory::get(ItemIds::IRON_HELMET));
-					$armorInventory->setChestplate(ItemFactory::get(ItemIds::IRON_CHESTPLATE));
-					$armorInventory->setLeggings(ItemFactory::get(ItemIds::IRON_LEGGINGS));
-					$armorInventory->setBoots(ItemFactory::get(ItemIds::IRON_BOOTS));
+					$inventory->addItem(VanillaItems::STONE_SWORD());
+					$armorInventory->setHelmet(VanillaItems::IRON_HELMET());
+					$armorInventory->setChestplate(VanillaItems::IRON_CHESTPLATE());
+					$armorInventory->setLeggings(VanillaItems::IRON_CHESTPLATE());
+					$armorInventory->setBoots(VanillaItems::IRON_BOOTS());
 
 					$player->setImmobile(false);
 				}
