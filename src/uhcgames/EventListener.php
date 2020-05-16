@@ -103,14 +103,6 @@ class EventListener implements Listener{
 		if($this->plugin->isInGame($player)){
 			$this->plugin->removeFromGame($player);
 		}
-
-		$cause = $player->getLastDamageCause();
-		if($cause instanceof EntityDamageByEntityEvent || $cause instanceof EntityDamageByChildEntityEvent){
-			$killer = $cause->getDamager();
-			if($killer instanceof Player){
-				$killer->sendTip(TextFormat::RED . "Eliminated " . $player->getDisplayName());
-			}
-		}
 	}
 
 	public function handlePlace(BlockPlaceEvent $ev){
