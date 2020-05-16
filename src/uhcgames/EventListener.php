@@ -116,14 +116,14 @@ class EventListener implements Listener{
 	public function handlePlace(BlockPlaceEvent $ev){
 		$block = $ev->getBlock();
 		$player = $ev->getPlayer();
-		$placeable = false;
+		$canBePlaced = false;
 		foreach($this->plugin->getConfig()->get("placeable-blocks") as $b){
 			if($block->getId() === VanillaBlocks::fromString($b)->getId()){
-				$placeable = true;
+				$canBePlaced = true;
 				break;
 			}
 		}
-		if(!$placeable){
+		if(!$canBePlaced){
 			$ev->setCancelled();
 		}else{
 			$this->placedBlocks[World::blockHash($block->getPos()->getX(), $block->getPos()->getY(), $block->getPos()->getZ())] = $player->getName();
@@ -135,14 +135,14 @@ class EventListener implements Listener{
 
 		$blockHash = World::blockHash($block->getPos()->getX(), $block->getPos()->getY(), $block->getPos()->getZ());
 		if(!isset($this->placedBlocks[$blockHash])){
-			$breakable = false;
+			$canBeBroken = false;
 			foreach($this->plugin->getConfig()->get("breakable-blocks") as $b){
 				if($block->getId() === VanillaBlocks::fromString($b)->getId()){
-					$breakable = true;
+					$canBeBroken = true;
 					break;
 				}
 			}
-			if(!$breakable){
+			if(!$canBeBroken){
 				$ev->setCancelled();
 			}
 		}else{
