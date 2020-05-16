@@ -68,9 +68,11 @@ class UHCGamesTask extends Task{
 
 		if($this->gamePhase >= GamePhase::PHASE_MATCH){
 			foreach($this->plugin->getGamePlayers() as $player){
-				$player->setImmobile(false);
+				$player->setImmobile(false); //?
 			}
-			$this->onWin();
+			if(count($this->plugin->getGamePlayers()) <= 1){
+				$this->handleWin();
+			}
 		}
 
 		foreach($this->plugin->getGamePlayers() as $player){
@@ -155,19 +157,9 @@ class UHCGamesTask extends Task{
 		$this->meetupTimer--;
 	}
 
-	private function onWin(){
+	private function handleWin(){
 		$server = $this->plugin->getServer();
-		if(count($this->plugin->getGamePlayers()) > 1) return;
-
-		if($this->shutdownTimer === 0){
-			foreach($server->getOnlinePlayers() as $p){
-				$config = $this->plugin->getConfig();
-				if((bool) $config->get("transfer")){
-					$p->transfer((string) $config->get("server-ip"), (int) $config->get("server-port"));
-				}
-			}
-			$this->plugin->getServer()->shutdown();
-		}elseif($this->shutdownTimer === 5){
+		if($this->shutdownTimer === 5){
 			if(count($this->plugin->getGamePlayers()) === 1){
 				foreach($this->plugin->getGamePlayers() as $player){
 					$player->setGamemode(GameMode::CREATIVE());
@@ -176,6 +168,14 @@ class UHCGamesTask extends Task{
 			}else{
 				$server->broadcastMessage(Loader::getPrefix() . "No one won the game.");
 			}
+		}elseif($this->shutdownTimer === 0){
+			$config = $this->plugin->getConfig();
+			if((bool) $config->get("transfer")){
+				foreach($server->getOnlinePlayers() as $p){
+					$p->transfer((string) $config->get("server-ip"), (int) $config->get("server-port"));
+				}
+			}
+			$this->plugin->getServer()->shutdown();
 		}
 
 		$this->shutdownTimer--;
