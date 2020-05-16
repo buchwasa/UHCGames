@@ -110,7 +110,7 @@ class UHCGamesTask extends Task{
 					$inventory->addItem(VanillaItems::STONE_SWORD());
 					$armorInventory->setHelmet(VanillaItems::IRON_HELMET());
 					$armorInventory->setChestplate(VanillaItems::IRON_CHESTPLATE());
-					$armorInventory->setLeggings(VanillaItems::IRON_CHESTPLATE());
+					$armorInventory->setLeggings(VanillaItems::IRON_LEGGINGS());
 					$armorInventory->setBoots(VanillaItems::IRON_BOOTS());
 
 					$player->setImmobile(false);
