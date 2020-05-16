@@ -90,11 +90,8 @@ class Loader extends PluginBase{
 		return isset($this->usedSpawns[$player->getName()]);
 	}
 
-	public function randomizeSpawn(Player $player, World $world, string $type = "spawnpoints"){
-		if($type === "meetup-spawns"){
-			$this->removePlayerUsedSpawn($player);
-		}
-		$spawns = $this->getConfig()->get("worlds")[$world->getFolderName()][$type];
+	public function randomizeSpawn(Player $player, World $world){
+		$spawns = $this->getConfig()->get("worlds")[$world->getFolderName()]["spawnpoints"];
 		shuffle($spawns);
 		$locations = array_shift($spawns);
 		ChunkRegion::onChunkGenerated($world, $locations[0] >> 4, $locations[2] >> 4, function() use($locations, $player, $world){
