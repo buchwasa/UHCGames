@@ -12,8 +12,8 @@ server-port: 19132
 items:
   - "bow"
   - "arrow:16"
-  # - "STONE:0:32"
-  # - "WOODEN_PLANKS:0:32"
+  - "stone:32"
+  - "oak_planks:32"
   - "lava_bucket"
   - "water_bucket"
   - "diamond:5"
@@ -26,10 +26,10 @@ items:
   - "golden_apple:4"
   - "steak:16"
   - "carrot:32"
-  # - "CAKE:0:1"
+  - "cake_block"
   - "gold_ingot:16"
   - "flint_and_steel"
-  # - "COBWEB:0:3"
+  - "cobweb:3"
 
 #This is the blocks that can be placed during the game.
 placeable-blocks:

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace uhcgames;
 
+use pocketmine\block\VanillaBlocks;
 use pocketmine\item\VanillaItems;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
@@ -105,7 +106,11 @@ class Loader extends PluginBase{
 		foreach($this->getConfig()->get("items") as $item){
 			if(mt_rand(1, 100) <= 50){
 				$data = explode(":", $item);
-				$itemString = VanillaItems::fromString($data[0]);
+				try{
+					$itemString = VanillaItems::fromString($data[0]);
+				}catch(\InvalidArgumentException $e){
+					$itemString = VanillaBlocks::fromString($data[0])->asItem();
+				}
 				$count = 1;
 				if(count($data) > 1){
 					$count = mt_rand(1, (int) $data[1]);
