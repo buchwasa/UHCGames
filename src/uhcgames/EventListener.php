@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace uhcgames;
 
 use pocketmine\block\VanillaBlocks;
+use pocketmine\entity\effect\EffectInstance;
+use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByChildEntityEvent;
@@ -12,11 +14,13 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketSendEvent;
 use pocketmine\event\world\ChunkLoadEvent;
+use pocketmine\item\GoldenApple;
 use pocketmine\item\VanillaItems;
 use pocketmine\network\mcpe\protocol\AdventureSettingsPacket;
 use pocketmine\player\GameMode;
@@ -64,6 +68,15 @@ class EventListener implements Listener{
 		$player->setImmobile();
 	}
 
+	public function handleConsume(PlayerItemConsumeEvent $ev){
+		$player = $ev->getPlayer();
+		$item = $ev->getItem();
+		if($item instanceof GoldenApple && $item->getNamedTag()->hasTag("goldenhead")){
+			$player->getEffects()->remove(VanillaEffects::REGENERATION());
+			$player->getEffects()->add(new EffectInstance(VanillaEffects::REGENERATION(), 200, 1));
+		}
+	}
+
 	public function handleDamage(EntityDamageEvent $ev){
 		if($this->plugin->getGameTask()->getGamePhase() <= GamePhase::PHASE_COUNTDOWN){
 			$ev->setCancelled();
@@ -82,7 +95,10 @@ class EventListener implements Listener{
 
 	public function handleDeath(PlayerDeathEvent $ev){
 		$player = $ev->getPlayer();
-		$player->getWorld()->dropItem($player->getPosition(), VanillaItems::GOLDEN_APPLE());
+		$goldenHead = VanillaItems::GOLDEN_APPLE();
+		$goldenHead->getNamedTag()->setInt("goldenhead", 1);
+		$goldenHead->setCustomName(TextFormat::RESET . TextFormat::GOLD . "Golden Head");
+		$player->getWorld()->dropItem($player->getPosition(), $goldenHead);
 		$player->setGamemode(GameMode::SPECTATOR());
 		if($this->plugin->isInGame($player)){
 			$this->plugin->removeFromGame($player);

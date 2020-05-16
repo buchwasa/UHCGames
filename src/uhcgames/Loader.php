@@ -4,14 +4,11 @@ declare(strict_types=1);
 namespace uhcgames;
 
 use pocketmine\item\VanillaItems;
-use pocketmine\item\ItemFactory;
-use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\block\tile\Chest;
 use pocketmine\world\World;
-use uhcgames\item\GoldenHead;
 use uhcgames\game\UHCGamesTask;
 use wumpotamus\chunkloader\ChunkRegion;
 use function array_shift;
@@ -43,8 +40,6 @@ class Loader extends PluginBase{
 
 			$this->gameTask = new UHCGamesTask($this, $map);
 			$this->getScheduler()->scheduleRepeatingTask($this->gameTask, 20);
-
-			(new ItemFactory())->register(new GoldenHead(ItemIds::GOLDEN_APPLE, 1, "Golden Head"), true);
 		}
 	}
 
