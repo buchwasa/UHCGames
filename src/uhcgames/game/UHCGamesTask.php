@@ -102,8 +102,6 @@ class UHCGamesTask extends Task{
 				$server->broadcastMessage(Loader::getPrefix() . "Game is starting in $this->countdown second(s).");
 				break;
 			case 0:
-				$this->gamePhase = GamePhase::PHASE_MATCH;
-
 				foreach($this->plugin->getGamePlayers() as $player){
 					$player->setHealth($player->getMaxHealth());
 					$player->getHungerManager()->setFood($player->getHungerManager()->getMaxFood());
@@ -118,6 +116,7 @@ class UHCGamesTask extends Task{
 
 					$player->setImmobile(false);
 				}
+				$this->gamePhase = GamePhase::PHASE_MATCH;
 				break;
 		}
 
