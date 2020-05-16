@@ -42,7 +42,7 @@ class Loader extends PluginBase{
 			new EventListener($this);
 
 			$this->gameTask = new UHCGamesTask($this, $map);
-			$this->getScheduler()->scheduleRepeatingTask(new UHCGamesTask($this, $map), 20);
+			$this->getScheduler()->scheduleRepeatingTask($this->gameTask, 20);
 
 			(new ItemFactory())->register(new GoldenHead(ItemIds::GOLDEN_APPLE, 1, "Golden Head"), true);
 		}
