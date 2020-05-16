@@ -26,7 +26,7 @@ items:
   - "golden_apple:4"
   - "steak:16"
   - "carrot:32"
-  - "cake_block"
+  - "cake"
   - "gold_ingot:16"
   - "flint_and_steel"
   - "cobweb:3"
@@ -36,7 +36,7 @@ placeable-blocks:
   - "oak_planks"
   - "stone"
   - "crafting_table"
-  - "cake_block"
+  - "cake"
   - "cobweb"
 
 #The list of placeable blocks is automatically able to be broken, since you can place them.
