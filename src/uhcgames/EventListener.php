@@ -16,11 +16,9 @@ use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\server\DataPacketSendEvent;
 use pocketmine\event\world\ChunkLoadEvent;
 use pocketmine\item\GoldenApple;
 use pocketmine\item\VanillaItems;
-use pocketmine\network\mcpe\protocol\AdventureSettingsPacket;
 use pocketmine\player\GameMode;
 use pocketmine\block\tile\Chest;
 use pocketmine\utils\TextFormat;
@@ -37,14 +35,6 @@ class EventListener implements Listener{
 	public function __construct(Loader $plugin){
 		$plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
 		$this->plugin = $plugin;
-	}
-
-	public function handleSend(DataPacketSendEvent $ev){
-		foreach($ev->getPackets() as $packet){
-			if($packet instanceof AdventureSettingsPacket){
-				$packet->setFlag(AdventureSettingsPacket::NO_CLIP, false);
-			}
-		}
 	}
 
 	public function handleLogin(PlayerLoginEvent $ev){
