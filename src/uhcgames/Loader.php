@@ -9,6 +9,7 @@ use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\block\tile\Chest;
+use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
 use uhcgames\game\UHCGamesTask;
 use wumpotamus\chunkloader\ChunkRegion;
@@ -29,7 +30,7 @@ class Loader extends PluginBase{
 	private static $prefix;
 
 	public function onEnable(){
-		self::$prefix = $this->getConfig()->get("prefix");
+		self::$prefix = str_replace("&", TextFormat::ESCAPE, $this->getConfig()->get("prefix"));
 		$map = $this->getServer()->getWorldManager()->getDefaultWorld();
 		if(!isset($this->getConfig()->get("worlds")[$map->getFolderName()])){
 			$this->getLogger()->emergency("Map not found in configuration, shutting down!");
