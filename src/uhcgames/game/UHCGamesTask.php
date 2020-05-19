@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace uhcgames\game;
 
+use pocketmine\block\VanillaBlocks;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\item\VanillaItems;
 use pocketmine\math\Vector3;
@@ -14,6 +15,7 @@ use pocketmine\world\World;
 use uhcgames\game\type\GamePhase;
 use uhcgames\game\type\GameTimer;
 use uhcgames\Loader;
+use wumpotamus\chunkloader\ChunkRegion;
 use function array_shift;
 use function count;
 use function floor;
@@ -41,7 +43,7 @@ class UHCGamesTask extends Task{
 		$this->world = $world;
 		$this->border = $plugin->getConfig()->get("worlds")[$world->getFolderName()]["border"];
 	}
-	
+
 	public function getGamePhase() : int{
 		return $this->gamePhase;
 	}
@@ -149,6 +151,7 @@ class UHCGamesTask extends Task{
 					}
 				}
 
+				$this->buildBorder();
 				$server->broadcastMessage(Loader::getPrefix() . "Border shrunk to $this->border! Walking into it will cause you to take damage!");
 				$this->gamePhase = GamePhase::PHASE_BORDER;
 				break;
@@ -187,12 +190,44 @@ class UHCGamesTask extends Task{
 			if((
 				 $p->getPosition()->getX() > $spawn->getX() + $this->border
 				 || $p->getPosition()->getX() < $spawn->getX() - $this->border ||
-				$p->getPosition()->getZ() > $spawn->getZ() + $this->border 
+				$p->getPosition()->getZ() > $spawn->getZ() + $this->border
 				|| $p->getPosition()->getZ() < $spawn->getZ() - $this->border
 			)){
 				$p->attack(new EntityDamageEvent($p, EntityDamageEvent::CAUSE_CUSTOM, 2));
 				$p->sendTip("You are outside border, get back inside!");
 			}
+		}
+	}
+
+	private function buildBorder(){
+		$safeX = $this->world->getSafeSpawn()->getX();
+		$safeZ = $this->world->getSafeSpawn()->getZ();
+		for($minX = $safeX - $this->border; $minX <= $safeX + $this->border; $minX++){
+			ChunkRegion::onChunkGenerated($this->world, $minX >> 4, $safeZ + $this->border >> 4, function() use ($minX, $safeX, $safeZ){
+				$highestBlock = $this->world->getHighestBlockAt($minX, $safeZ + $this->border);
+				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
+					$this->world->setBlock(new Vector3($minX, $y, $safeZ + $this->border), VanillaBlocks::BEDROCK());
+				}
+
+				$highestBlock = $this->world->getHighestBlockAt($minX, $safeZ - $this->border);
+				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
+					$this->world->setBlock(new Vector3($minX, $y, $safeZ - $this->border), VanillaBlocks::BEDROCK());
+				}
+			});
+		}
+
+		for($minZ = $safeZ - $this->border; $minZ <= $safeZ + $this->border; $minZ++){
+			ChunkRegion::onChunkGenerated($this->world, $safeX + $this->border >> 4, $minZ >> 4, function() use ($minZ, $safeX, $safeZ){
+				$highestBlock = $this->world->getHighestBlockAt($safeX + $this->border, $minZ);
+				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
+					$this->world->setBlock(new Vector3($safeX + $this->border, $y, $minZ), VanillaBlocks::BEDROCK());
+				}
+
+				$highestBlock = $this->world->getHighestBlockAt($safeX - $this->border, $minZ);
+				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
+					$this->world->setBlock(new Vector3($safeX - $this->border, $y, $minZ), VanillaBlocks::BEDROCK());
+				}
+			});
 		}
 	}
 }

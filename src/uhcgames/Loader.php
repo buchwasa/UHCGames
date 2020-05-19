@@ -92,7 +92,7 @@ class Loader extends PluginBase{
 		shuffle($spawns);
 		$locations = array_shift($spawns);
 		ChunkRegion::onChunkGenerated($world, $locations[0] >> 4, $locations[2] >> 4, function() use($locations, $player, $world){
-			if(!in_array($locations, $this->usedSpawns)){
+			if(!in_array($locations, $this->getUsedSpawns())){
 				$player->teleport(new Vector3($locations[0], $locations[1], $locations[2]));
 				$this->usedSpawns[$player->getName()] = $locations;
 			}else{
