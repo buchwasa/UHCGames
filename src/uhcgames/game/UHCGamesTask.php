@@ -208,7 +208,9 @@ class UHCGamesTask extends Task{
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
 					$this->world->setBlock(new Vector3($minX, $y, $safeZ + $this->border), VanillaBlocks::BEDROCK());
 				}
+			});
 
+			ChunkRegion::onChunkGenerated($this->world, $minX >> 4, $safeZ - $this->border >> 4, function() use ($minX, $safeX, $safeZ){
 				$highestBlock = $this->world->getHighestBlockAt($minX, $safeZ - $this->border);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
 					$this->world->setBlock(new Vector3($minX, $y, $safeZ - $this->border), VanillaBlocks::BEDROCK());
@@ -222,7 +224,9 @@ class UHCGamesTask extends Task{
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
 					$this->world->setBlock(new Vector3($safeX + $this->border, $y, $minZ), VanillaBlocks::BEDROCK());
 				}
+			});
 
+			ChunkRegion::onChunkGenerated($this->world, $safeX - $this->border >> 4, $minZ >> 4, function() use ($minZ, $safeX, $safeZ){
 				$highestBlock = $this->world->getHighestBlockAt($safeX - $this->border, $minZ);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
 					$this->world->setBlock(new Vector3($safeX - $this->border, $y, $minZ), VanillaBlocks::BEDROCK());
