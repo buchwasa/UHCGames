@@ -12,7 +12,7 @@ use pocketmine\block\tile\Chest;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
 use uhcgames\game\UHCGamesTask;
-use wumpotamus\chunkloader\ChunkRegion;
+use muqsit\chunkloader\ChunkRegion;
 use function array_shift;
 use function explode;
 use function in_array;
