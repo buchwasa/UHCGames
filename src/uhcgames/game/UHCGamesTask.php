@@ -15,7 +15,7 @@ use pocketmine\world\World;
 use uhcgames\game\type\GamePhase;
 use uhcgames\game\type\GameTimer;
 use uhcgames\Loader;
-use wumpotamus\chunkloader\ChunkRegion;
+use muqsit\chunkloader\ChunkRegion;
 use function array_shift;
 use function count;
 use function floor;
