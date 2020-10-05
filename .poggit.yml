@@ -1,13 +1,13 @@
---- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/stephen-mc-pl/UHCGames
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/buchwasa/UHCGames
 build-by-default: true
 branches:
-- master
+- main
 projects:
   UHCGames:
     path: ""
     libs:
       - src: stephen-mc-pl/libChunkLoader/libChunkLoader
-        branch: "4.0"
+        branch: pm4
         version: 3.0.0
     lint:
       phpstan: false
