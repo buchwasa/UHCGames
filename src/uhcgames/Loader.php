@@ -29,19 +29,21 @@ class Loader extends PluginBase{
 	/** @var string */
 	private static $prefix;
 
-	public function onEnable(){
+	public function onEnable() : void{
 		self::$prefix = str_replace("&", TextFormat::ESCAPE, $this->getConfig()->get("prefix"));
 		$map = $this->getServer()->getWorldManager()->getDefaultWorld();
 		if(!isset($this->getConfig()->get("worlds")[$map->getFolderName()])){
 			$this->getLogger()->emergency("Map not found in configuration, shutting down!");
 			$this->getServer()->shutdown();
 		}else{
-			$map->setTime(7000);
-			$map->stopTime();
-			new EventListener($this);
+			if($map !== null){
+				$map->setTime(7000);
+				$map->stopTime();
+				new EventListener($this);
 
-			$this->gameTask = new UHCGamesTask($this, $map);
-			$this->getScheduler()->scheduleRepeatingTask($this->gameTask, 20);
+				$this->gameTask = new UHCGamesTask($this, $map);
+				$this->getScheduler()->scheduleRepeatingTask($this->gameTask, 20);
+			}
 		}
 	}
 
@@ -87,7 +89,7 @@ class Loader extends PluginBase{
 		return isset($this->usedSpawns[$player->getName()]);
 	}
 
-	public function randomizeSpawn(Player $player, World $world){
+	public function randomizeSpawn(Player $player, World $world) : void{
 		$spawns = $this->getConfig()->get("worlds")[$world->getFolderName()]["spawnpoints"];
 		shuffle($spawns);
 		$locations = array_shift($spawns);
@@ -101,7 +103,7 @@ class Loader extends PluginBase{
 		});
 	}
 
-	public function fillChest(Chest $chest){
+	public function fillChest(Chest $chest) : void{
 		$inventory = $chest->getInventory();
 		$inventory->clearAll();
 		foreach($this->getConfig()->get("items") as $item){
@@ -124,7 +126,7 @@ class Loader extends PluginBase{
 		}
 	}
 
-	public function onDisable(){
+	public function onDisable() : void{
 		$worldNames = array_keys((array) $this->getConfig()->get("worlds"));
 		$this->getServer()->getConfigGroup()->setConfigString("level-name", $worldNames[array_rand($worldNames)]);
 	}

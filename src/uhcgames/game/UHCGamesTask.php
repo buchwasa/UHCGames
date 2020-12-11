@@ -83,7 +83,7 @@ class UHCGamesTask extends Task{
 		}
 	}
 
-	private function handleCountdown(){
+	private function handleCountdown() : void{
 		$server = $this->plugin->getServer();
 		if(count($this->plugin->getGamePlayers()) <= 1){
 			$this->gamePhase = GamePhase::PHASE_WAITING;
@@ -127,7 +127,7 @@ class UHCGamesTask extends Task{
 		$this->countdown--;
 	}
 
-	private function handleMeetup(){
+	private function handleMeetup() : void{
 		$server = $this->plugin->getServer();
 		switch($this->meetupTimer){
 			case 30:
@@ -160,7 +160,7 @@ class UHCGamesTask extends Task{
 		$this->meetupTimer--;
 	}
 
-	private function handleWin(){
+	private function handleWin() : void{
 		$server = $this->plugin->getServer();
 		if($this->shutdownTimer === 5){
 			if(count($this->plugin->getGamePlayers()) === 1){
@@ -184,7 +184,7 @@ class UHCGamesTask extends Task{
 		$this->shutdownTimer--;
 	}
 
-	private function handleBorder(Player $p){
+	private function handleBorder(Player $p) : void{
 		$spawn = $this->world->getSpawnLocation();
 		if($this->gamePhase === GamePhase::PHASE_BORDER){
 			if((
@@ -199,19 +199,19 @@ class UHCGamesTask extends Task{
 		}
 	}
 
-	private function buildBorder(){
+	private function buildBorder() : void{
 		$safeX = $this->world->getSafeSpawn()->getX();
 		$safeZ = $this->world->getSafeSpawn()->getZ();
 		for($minX = $safeX - $this->border; $minX <= $safeX + $this->border; $minX++){
-			ChunkRegion::onChunkGenerated($this->world, $minX >> 4, $safeZ + $this->border >> 4, function() use ($minX, $safeX, $safeZ){
-				$highestBlock = $this->world->getHighestBlockAt($minX, $safeZ + $this->border);
+			ChunkRegion::onChunkGenerated($this->world, $minX >> 4, $safeZ + $this->border >> 4, function() use ($minX, $safeZ){
+				$highestBlock = $this->world->getHighestBlockAt((int) $minX, (int) $safeZ + $this->border);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
 					$this->world->setBlock(new Vector3($minX, $y, $safeZ + $this->border), VanillaBlocks::BEDROCK());
 				}
 			});
 
-			ChunkRegion::onChunkGenerated($this->world, $minX >> 4, $safeZ - $this->border >> 4, function() use ($minX, $safeX, $safeZ){
-				$highestBlock = $this->world->getHighestBlockAt($minX, $safeZ - $this->border);
+			ChunkRegion::onChunkGenerated($this->world, $minX >> 4, $safeZ - $this->border >> 4, function() use ($minX, $safeZ){
+				$highestBlock = $this->world->getHighestBlockAt((int) $minX, (int) $safeZ - $this->border);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
 					$this->world->setBlock(new Vector3($minX, $y, $safeZ - $this->border), VanillaBlocks::BEDROCK());
 				}
@@ -219,15 +219,15 @@ class UHCGamesTask extends Task{
 		}
 
 		for($minZ = $safeZ - $this->border; $minZ <= $safeZ + $this->border; $minZ++){
-			ChunkRegion::onChunkGenerated($this->world, $safeX + $this->border >> 4, $minZ >> 4, function() use ($minZ, $safeX, $safeZ){
-				$highestBlock = $this->world->getHighestBlockAt($safeX + $this->border, $minZ);
+			ChunkRegion::onChunkGenerated($this->world, $safeX + $this->border >> 4, $minZ >> 4, function() use ($minZ, $safeX){
+				$highestBlock = $this->world->getHighestBlockAt((int) $safeX + $this->border, (int) $minZ);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
 					$this->world->setBlock(new Vector3($safeX + $this->border, $y, $minZ), VanillaBlocks::BEDROCK());
 				}
 			});
 
-			ChunkRegion::onChunkGenerated($this->world, $safeX - $this->border >> 4, $minZ >> 4, function() use ($minZ, $safeX, $safeZ){
-				$highestBlock = $this->world->getHighestBlockAt($safeX - $this->border, $minZ);
+			ChunkRegion::onChunkGenerated($this->world, $safeX - $this->border >> 4, $minZ >> 4, function() use ($minZ, $safeX){
+				$highestBlock = $this->world->getHighestBlockAt((int) $safeX - $this->border, (int) $minZ);
 				for($y = $highestBlock; $y <= $highestBlock + 4; $y++){
 					$this->world->setBlock(new Vector3($safeX - $this->border, $y, $minZ), VanillaBlocks::BEDROCK());
 				}

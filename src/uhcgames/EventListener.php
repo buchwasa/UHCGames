@@ -29,7 +29,7 @@ use function in_array;
 class EventListener implements Listener{
 	/** @var Loader */
 	private $plugin;
-	/** @var array */
+	/** @var string[] */
 	private $placedBlocks = [];
 
 	public function __construct(Loader $plugin){
@@ -37,7 +37,7 @@ class EventListener implements Listener{
 		$this->plugin = $plugin;
 	}
 
-	public function handleLogin(PlayerLoginEvent $ev){
+	public function handleLogin(PlayerLoginEvent $ev) : void{
 		$player = $ev->getPlayer();
 		if($this->plugin->getGameTask()->getGamePhase() <= GamePhase::PHASE_COUNTDOWN){
 			$this->plugin->addToGame($player);
@@ -46,7 +46,7 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function handleJoin(PlayerJoinEvent $ev){
+	public function handleJoin(PlayerJoinEvent $ev) : void{
 		$player = $ev->getPlayer();
 		$ev->setJoinMessage("");
 
@@ -55,7 +55,7 @@ class EventListener implements Listener{
 		$player->setImmobile();
 	}
 
-	public function handleConsume(PlayerItemConsumeEvent $ev){
+	public function handleConsume(PlayerItemConsumeEvent $ev) : void{
 		$player = $ev->getPlayer();
 		$item = $ev->getItem();
 		if($item instanceof GoldenApple && $item->getNamedTag()->hasTag("goldenhead")){
@@ -64,13 +64,13 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function handleDamage(EntityDamageEvent $ev){
+	public function handleDamage(EntityDamageEvent $ev) : void{
 		if($this->plugin->getGameTask()->getGamePhase() <= GamePhase::PHASE_COUNTDOWN){
 			$ev->cancel();
 		}
 	}
 
-	public function handleLeave(PlayerQuitEvent $ev){
+	public function handleLeave(PlayerQuitEvent $ev) : void{
 		$player = $ev->getPlayer();
 		$ev->setQuitMessage("");
 		if($this->plugin->isInGame($player)){
@@ -80,7 +80,7 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function handleDeath(PlayerDeathEvent $ev){
+	public function handleDeath(PlayerDeathEvent $ev) : void{
 		$player = $ev->getPlayer();
 		$goldenHead = VanillaItems::GOLDEN_APPLE();
 		$goldenHead->getNamedTag()->setInt("goldenhead", 1);
@@ -92,7 +92,7 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function handlePlace(BlockPlaceEvent $ev){
+	public function handlePlace(BlockPlaceEvent $ev) : void{
 		$block = $ev->getBlock();
 		$player = $ev->getPlayer();
 		$canBePlaced = false;
@@ -105,14 +105,14 @@ class EventListener implements Listener{
 		if(!$canBePlaced){
 			$ev->cancel();
 		}else{
-			$this->placedBlocks[World::blockHash($block->getPos()->getX(), $block->getPos()->getY(), $block->getPos()->getZ())] = $player->getName();
+			$this->placedBlocks[World::blockHash($block->getPos()->getFloorX(), $block->getPos()->getFloorY(), $block->getPos()->getFloorZ())] = $player->getName();
 		}
 	}
 
-	public function handleBreak(BlockBreakEvent $ev){
+	public function handleBreak(BlockBreakEvent $ev) : void{
 		$block = $ev->getBlock();
 
-		$blockHash = World::blockHash($block->getPos()->getX(), $block->getPos()->getY(), $block->getPos()->getZ());
+		$blockHash = World::blockHash($block->getPos()->getFloorX(), $block->getPos()->getFloorY(), $block->getPos()->getFloorZ());
 		if(!isset($this->placedBlocks[$blockHash])){
 			$canBeBroken = false;
 			foreach($this->plugin->getConfig()->get("breakable-blocks") as $b){
@@ -129,13 +129,13 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function handleRegen(EntityRegainHealthEvent $ev){
+	public function handleRegen(EntityRegainHealthEvent $ev) : void{
 		if($ev->getRegainReason() === EntityRegainHealthEvent::CAUSE_SATURATION){
 			$ev->cancel();
 		}
 	}
 
-	public function handleChunkLoad(ChunkLoadEvent $ev){
+	public function handleChunkLoad(ChunkLoadEvent $ev) : void{
 		$chunk = $ev->getChunk();
 		foreach($chunk->getTiles() as $tile){
 			if($tile instanceof Chest){
