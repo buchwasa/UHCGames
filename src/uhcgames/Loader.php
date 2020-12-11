@@ -32,11 +32,11 @@ class Loader extends PluginBase{
 	public function onEnable() : void{
 		self::$prefix = str_replace("&", TextFormat::ESCAPE, $this->getConfig()->get("prefix"));
 		$map = $this->getServer()->getWorldManager()->getDefaultWorld();
-		if(!isset($this->getConfig()->get("worlds")[$map->getFolderName()])){
-			$this->getLogger()->emergency("Map not found in configuration, shutting down!");
-			$this->getServer()->shutdown();
-		}else{
-			if($map !== null){
+		if($map !== null){
+			if(!isset($this->getConfig()->get("worlds")[$map->getFolderName()])){
+				$this->getLogger()->emergency("Map not found in configuration, shutting down!");
+				$this->getServer()->shutdown();
+			}else{
 				$map->setTime(7000);
 				$map->stopTime();
 				new EventListener($this);
