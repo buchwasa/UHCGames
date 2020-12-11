@@ -6,7 +6,7 @@ projects:
   UHCGames:
     path: ""
     libs:
-      - src: stephen-mc-pl/libChunkLoader/libChunkLoader
+      - src: buchwasa/libChunkLoader/libChunkLoader
         branch: pm4
         version: 3.0.0
     lint:
