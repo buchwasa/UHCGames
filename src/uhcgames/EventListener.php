@@ -66,7 +66,7 @@ class EventListener implements Listener{
 
 	public function handleDamage(EntityDamageEvent $ev){
 		if($this->plugin->getGameTask()->getGamePhase() <= GamePhase::PHASE_COUNTDOWN){
-			$ev->setCancelled();
+			$ev->cancel();
 		}
 	}
 
@@ -103,7 +103,7 @@ class EventListener implements Listener{
 			}
 		}
 		if(!$canBePlaced){
-			$ev->setCancelled();
+			$ev->cancel();
 		}else{
 			$this->placedBlocks[World::blockHash($block->getPos()->getX(), $block->getPos()->getY(), $block->getPos()->getZ())] = $player->getName();
 		}
@@ -122,7 +122,7 @@ class EventListener implements Listener{
 				}
 			}
 			if(!$canBeBroken){
-				$ev->setCancelled();
+				$ev->cancel();
 			}
 		}else{
 			unset($this->placedBlocks[$blockHash]);
@@ -131,7 +131,7 @@ class EventListener implements Listener{
 
 	public function handleRegen(EntityRegainHealthEvent $ev){
 		if($ev->getRegainReason() === EntityRegainHealthEvent::CAUSE_SATURATION){
-			$ev->setCancelled();
+			$ev->cancel();
 		}
 	}
 

@@ -126,6 +126,6 @@ class Loader extends PluginBase{
 
 	public function onDisable(){
 		$worldNames = array_keys((array) $this->getConfig()->get("worlds"));
-		$this->getServer()->setConfigString("level-name", $worldNames[array_rand($worldNames)]);
+		$this->getServer()->getConfigGroup()->setConfigString("level-name", $worldNames[array_rand($worldNames)]);
 	}
 }

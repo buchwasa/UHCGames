@@ -48,7 +48,7 @@ class UHCGamesTask extends Task{
 		return $this->gamePhase;
 	}
 
-	public function onRun(int $currentTick){
+	public function onRun() : void{
 		switch($this->gamePhase){
 			case GamePhase::PHASE_WAITING:
 				if(count($this->plugin->getGamePlayers()) >= 2){

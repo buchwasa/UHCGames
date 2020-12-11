@@ -4,5 +4,5 @@ parameters:
 		- src
 	bootstrapFiles:
 		- ./pocketmine/vendor/autoload.php
-  scanDirectories:
+	scanDirectories:
 		- phar://libChunkLoader.phar
